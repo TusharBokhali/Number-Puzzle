@@ -1,98 +1,110 @@
-import React, { useState } from "react";
-import "./App.css";
-import left from "./image/left.svg";
-import next from "./image/next.svg";
-import { wait } from "@testing-library/user-event/dist/utils";
+import React, { useEffect, useState } from 'react'
+import './App.css'
+import axios from 'axios';
+let i=0;
 function App() {
-  let shop;
-  let [api,setapi]=useState("")
-  let [I, setI] = useState(0);
-  let Images = [
-    "https://images-eu.ssl-images-amazon.com/images/G/31/img21/shoes/2024/GW/Aug/BAU/UNREC/allNEW/3000_PC_ALL._CB565541466_.jpg",
-    "https://images-eu.ssl-images-amazon.com/images/G/31/img21/OHL/GW/BAU/May/Budget/PC_Hero_3000x1200_BS_PC._CB558386585_.jpg",
-    "https://images-eu.ssl-images-amazon.com/images/G/31/img21/MA2024/GW/August/Unrec/BAU/21Aug/2-1._CB565867124_.jpg",
-    "https://images-eu.ssl-images-amazon.com/images/G/31/img23/Consumables/X-GL/Feb5/PC_Hero_1_3000._CB582457311_.jpg",
-  ];
 
-  let nexts = () => {
-    if (I < Images.length - 1) {
-      setI(I + 1);
-    } else {
-      setI(0);
+  let [Fname, setFname] = useState("")
+  let [Lname, setLname] = useState("")
+  let [Mno, setMno] = useState("")
+  let [email, setEmail] = useState("")
+  let [Nname, setNname] = useState("")
+  let [data,setData] = useState([]);
+
+
+  // useEffect(()=>{
+  //   axios.get("https://service.apikeeda.com/api/v1/contact-book")
+  //   .then((res)=>{
+  //     console.log(res);
+  //   })
+  //   {
+  //     headers: {
+  //         "x-apikeeda-key":"u1726467242745ido140588488gm"
+  //     }
+  // }
+  // },[])
+
+  let submits = () => {
+    if (Fname !== "" && Lname !== "" && Mno !== "" && email !== "") {
+      let dub = [...data];
+      dub[i++]={
+        FirstName:Fname,
+        LastName:Lname,
+        Mobile:Mno,
+        emails:email,
+        Nnames:Nname
+      }
+      console.log(dub)
+      setData(dub)
+    }else{
+      alert("Please Enter The Valid Details:")
     }
-  };
-
-  let previews = () => {
-    if (I !== 0) {
-      setI(I - 1);
-    } else {
-      setI(Images.length - 1);
-    }
-  };
-  let product;
-
-  async function loaded() {
-    let data = await fetch("https://dummyjson.com/products");
-    product = await data.json();
-
-    return  product;
+    setFname("")
+    setEmail("")
+    setLname("")
+    setMno("")
+    setNname("")
   }
-  
-    
-  
-  
+
   return (
     <>
-    <div></div>
-      <div className="body">
-        <div className="container">
-          <nav>
-            <div className="log">
-              <a href="#">
-                <img
-                  src="https://banner2.cleanpng.com/20180519/jjs/avq0lgq0t.webp"
-                  alt=""
-                />
-              </a>
-            </div>
-            <ul>
-              <li>
-                <a href="#">Home</a>
-              </li>
-              <li>
-                <a href="#">About</a>
-              </li>
-              <li>
-                <a href="#">Version</a>
-              </li>
-            </ul>
-          </nav>
-          <div className="slider">
-            <img src={Images[I]} alt="" />
-          </div>
-          <div className="button">
+      <div className="container">
+        <div className='AllForms'>
+          <div className="getData">
             <div>
-              <img src={left} onClick={previews} />
+              <label htmlFor="first">FirstName</label>
+              <input type="text" id="first" placeholder='Enter The Name' value={Fname} onChange={(event)=>{setFname(event.target.value)}}/>
             </div>
             <div>
-              <img src={next} onClick={nexts} />
+              <label htmlFor="last">LastName</label>
+              <input type="text" id="last" placeholder='Enter The LastName' value={Lname} onChange={(event)=>{setLname(event.target.value)}}/>
+            </div>
+            <div>
+              <label htmlFor="last">Mo.No:</label>
+              <input type="Number" id="last" placeholder='Enter The Mo.No' value={Mno} onChange={(event)=>{setMno(event.target.value)}}/>
+            </div>
+            <div>
+              <label htmlFor="email">Email:</label>
+              <input type="email" id="email" placeholder='Enter The Email' value={email} onChange={(event)=>{setEmail(event.target.value)}}/>
+            </div>
+            <div>
+              <label htmlFor="nickName">nickName:</label>
+              <input type="text" id="nickName" placeholder='Enter The NickName' value={Nname} onChange={(event)=>{setNname(event.target.value)}}/>
             </div>
           </div>
-
-          <div className="Product-Card">
-            <div className="cards">
-              <div className="image">
-                <img
-                  src="https://www.cdmi.in/courses@1x/_0010_react-js-training-institute.webp"
-                  alt=""
-                />
-              </div>
-            </div>
+          <div className='center'>
+            <button onClick={submits}>Submit</button>
           </div>
+        </div>
+        <div className="table-Data">
+          <table border={1} width={'80%'} cellPadding={0} cellSpacing={0}>
+            <tr>
+              <th>FirstName</th>
+              <th>LastName</th>
+              <th>Mo.No</th>
+              <th>Email</th>
+              <th>NickName</th>
+            </tr>
+            
+              {
+                data.map((el)=>{ 
+                  return(
+                    <tr>
+                      <td>{el.FirstName}</td>
+                      <td>{el.LastName}</td>
+                      <td>{el.Mobile}</td>
+                      <td>{el.emails}</td>
+                      <td>{el.Nnames}</td>
+                    </tr>
+                  )
+                })
+              }
+            
+          </table>
         </div>
       </div>
     </>
-  );
+  )
 }
 
-export default App;
+export default App
